@@ -1,87 +1,67 @@
-const usersModel = require('../models/users.model')
-const bcrypt = require ('bcrypt')
-const jwt = require('jsonwebtoken')
+const usersModel = require("../models/users.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+async function signUp(req, res) {
+  try {
+    const pwd = await bcrypt.hash(req.body.pwd, 10)
+    const user = await usersModel.create({
+      name: req.body.name,
+      email: req.body.email,
+      pwd
+    });
 
+    const token = jwt.sign(
+      {
+        name: user.name,
+        id: user._id,
+        email: user.email,
+        admin: user.admin,
+      },
+      process.env.SECRET
+    );
 
-function signUp (req, res) {
-  const hashed_pwd = bcrypt.hashSync(req.body.pwd, 10)
-  
-  const hashed_body = {
-    name: req.body.name,
-    email: req.body.email,
-    pwd: hashed_pwd,
-    admin: req.body.admin
+    return res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      token: token,
+    });
+  } catch (error) {
+    res.status(500).json(error);
   }
-
-  usersModel.create(hashed_body)
-    .then((user) => {
-
-      const insideToken = {
-        name: user.name,
-        id: user._id,
-        email: user.email,
-        admin: user.admin
-      }
-
-      const token = jwt.sign(
-        insideToken,
-        process.env.SECRET
-      )
-
-      const resUser = {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        token: token
-      }
-      res.json(resUser)
-
-    })
-    .catch((err) => {
-      res.json(err)
-    })
 }
 
-function login (req, res) {
+async function login(req, res) {
+  try {
+    const user = await usersModel.findOne({ email: req.body.email })
+    
+    if (!user) return res.json("Can not find the email");
 
-  usersModel.findOne({email: req.body.email})
-    .then((user) => {
-      if (!user) res.json('Can not find the email')
+    bcrypt.compare(req.body.pwd, user.pwd, (err, result) => {
+      if (!result) {
+        return res.json({ error: `wrong password for ${req.body.email}` })
+      }
+      const token = jwt.sign({
+        name: user.name,
+        email: user.email,
+        id: user._id,
+        admin: user.admin,
+      }, process.env.SECRET);
 
-      bcrypt.compare(
-        req.body.pwd,
-        user.pwd,
-        (err) => {
-          if(err) res.json('Invalid Password')
-
-          const insideToken = {
-            name: user.name,
-            email: user.email,
-            id: user._id,
-            admin: user.admin
-          }
-
-          const token = jwt.sign(
-            insideToken,
-            process.env.SECRET,
-          )
-
-          resUser = {
-            name: user.name,
-            email: user.email,
-            id: user._id,
-            token: token
-          }
-          
-          res.json(resUser)
-        })
-
+      res.json({
+        name: user.name,
+        email: user.email,
+        id: user._id,
+        token: token,
+      })
     })
-    .catch((err) => console.error(err))
+  } catch (error) {
+    res.status(500).json(error);
+  }
 }
 
 module.exports = {
   signUp,
-  login
-}
+  login,
+};
