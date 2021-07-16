@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URL, {dbName: process.env.MONGO_DB || 'test',
 
 const app = express()
   .use(cors())
-  .use(morgan('combined'))
+  .use(morgan('dev'))
   .use(express.json())
   .use('/api', router)
   

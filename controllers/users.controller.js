@@ -8,95 +8,92 @@ function seeYourUser(req, res) {
     .catch((err) => res.json(err))
 }
 
+function addDivelog(req, res) {
+  const userId = res.locals.id
+  const divelog = req.body
 
+  usersModel.findById(userId)
+    .then((user) => {
+      user.divelog.push(divelog)
+      user.save() 
+      res.json(user.divelog)
+      console.log(user.divelog);
+    })
+    .catch((err) => {
+      res.json(err)
+    })
+}
 
-// function getAllUsers(req, res) {
-//   usersModel.find(req.query)
-//     .populate('students')
-//     .then((users) => {
-//       res.json(users)
-//     })
-//     .catch((err) => {
-//       res.json(err)
-//     })
-// }
+function seeOneDivelog(req, res) {
+  const userId = res.locals.id
 
-// function seeOneUser(req, res) {
-//   usersModel.findById(req.params.userId)
-//     .then((user) => {
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       res.json(err)
-//     })
-// }
+  usersModel.findById(userId)
+  .then((user) => { 
+    const divelogId = user.divelog.id(req.params.divelogId)
+    res.json(divelogId)
+    console.log(divelogId)
+  })
+  .catch((err) => {
+    res.json(err)
+  })
+}
 
-// function modifyUser(req, res){
-//   usersModel.findByIdAndUpdate(req.params.userId, req.body, {new : true})
-//     .then((user) => {
-//       console.log(user);
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       res.json(err)
-//     })
-// }
-
-// function deleteUser(req, res){
-//   usersModel.findByIdAndDelete(req.params.userId)
-//     .then((user) => {
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       res.json(err)
-//     })
-// }
-
-// function addStudentToUser(req, res){
-//   const userId = req.params.userId
-//   const refStudent = req.body._id
-
-//   usersModel.findById(userId)
-//     .then((user) => {
-//     user.students.push(refStudent)
-//     user.save()
-//     res.json(user)
-//   })
-//   .catch((err) => {
-//     res.json(err)
-//   })
-// }
-
-// function seeUsersStudentList(req, res){
-//   const userId = req.params.userId
+function updateDivelog(req, res) {
+  const userId = res.locals.id
+  const divelog = req.body
   
-//   usersModel.findById(userId)
-//     .populate('students')
-//     .then((user) => {
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       res.json(err)
-//     })
-// }
+  usersModel.findById(userId)
+  .then((user) => {
+    
+    const divelogId = user.divelog.id(req.params.divelogId)
+    
+    console.log(divelogId.spot);
+    res.json(divelogId)
+  })
+  .catch((err) => {
+    res.json(err)
+  })
+}
 
-// function deleteStudentFromUser(req, res){ 
-//   const userId = req.params.userId
-//   const refStudent = req.body._id
 
-//   usersModel.findById(userId)
-//     .then((user) => {
-//       const index = user.students.indexOf(refStudent)
-//       if (index !== -1) user.students.splice(index, 1)
-//       user.save()
-//       res.json(user);
-//     })
-//     .catch((err) => {
-//       res.status(404).json(err);
-//     })
-// }
+
+function deleteOneDivelog(req, res){
+  const userId = res.locals.id
+
+  usersModel.findById(userId)
+  .then((user) => {
+    
+    const divelogId = user.divelog.id(req.params.divelogId)
+    divelogId.remove()
+    user.save()
+    res.json(user.divelog)
+    console.log(user.divelog)
+  })
+  .catch((err) => {
+    res.json(err)
+  })
+}
+
+function deleteUser(req, res){
+  const userId = res.locals.id
+
+  usersModel.findByIdAndDelete(userId)
+    .then((user) => {
+      console.log(user)
+      res.json(user)
+    })
+    .catch((err) => {
+      res.json(err)
+    })
+}
+
 
 module.exports = {
+  addDivelog,
+  seeOneDivelog,
+  updateDivelog,
+  deleteOneDivelog,
   seeYourUser,
+  deleteUser
  
 }    

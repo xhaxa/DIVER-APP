@@ -1,11 +1,37 @@
 const mongoose = require('mongoose')
 
+const divelogSchema = new mongoose.Schema({
+  date: {
+    type: String,
+    
+  },
+  time: { 
+    type: String, 
+    required: [true, 'The time cannot be blank.'],
+  },
+  spot: {
+    type: String,
+    required: [true, 'The spot cannot be blank.'],
+  },
+  duration: { 
+    type: Number, 
+    required: [true, 'The duration cannot be blank.'],
+  },
+  depth: { 
+    type: Number, 
+    required: [true, 'The depth cannot be blank.'],
+  },
+})
+
+const divelogModel = mongoose.model('divelog', divelogSchema)
+
+
+
 
 const usersSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Your username cannot be blank.'],
-    
+    required: [true, 'Your username cannot be blank.'], 
   },
   email: { 
     type: String, 
@@ -15,23 +41,7 @@ const usersSchema = new mongoose.Schema({
   pwd: {
     type: String
   },
-  turn: {
-    type: String,
-    enum: ['lateshift', 'earlyshift']
-  },
-  students: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "students",
-    }
-  ],      
-  planning: {
-    type: Date,
-  },
-  admin: {
-    type: Boolean,
-    default: false,
-  }
+  divelog: [divelogSchema]
 })
 
 const usersModel = mongoose.model('users', usersSchema);
