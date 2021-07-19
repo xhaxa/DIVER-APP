@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 async function signUp(req, res) {
+
   try {
     const pwd = await bcrypt.hash(req.body.pwd, 10)
     const user = await usersModel.create({
@@ -33,10 +34,11 @@ async function signUp(req, res) {
 }
 
 async function login(req, res) {
+  console.log(req.body)
   try {
     const user = await usersModel.findOne({ email: req.body.email })
     
-    if (!user) return res.json("Can not find the email");
+    if (!user) res.json("Can not find the email");
 
     bcrypt.compare(req.body.pwd, user.pwd, (err, result) => {
       if (!result) {
