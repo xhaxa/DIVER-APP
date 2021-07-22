@@ -51,10 +51,13 @@ async function login(req, res) {
         admin: user.admin,
       }, process.env.SECRET);
 
+      console.log(token)
       return res.json({
-        name: user.name,
-        email: user.email,
-        id: user._id,
+        user: {
+          name: user.name,
+          email: user.email,
+          id: user._id,
+        },
         token: token,
       })
     })

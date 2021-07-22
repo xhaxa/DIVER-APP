@@ -1,6 +1,6 @@
 const usersRouter = require('express').Router()
 
-const { auth} = require('../utils/function')
+const { auth } = require('../utils/function')
 const { seeYourUser, deleteUser, addDivelog, seeOneDivelog, deleteOneDivelog, updateDivelog } = require('../controllers/users.controller')
 
 

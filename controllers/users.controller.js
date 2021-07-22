@@ -68,7 +68,7 @@ function updateDivelog(req, res) {
     
     //weather NO FUNCIONA
     if (req.body.weather){
-      divelogId.weather.surfacetemperature = req.body.weather.surfacetemperature ? req.body.weather.surfacetemperature : divelogId.weather.surfacetemperature
+      divelogId.weather.surfaceTemperature = req.body.weather.surfaceTemperature ? req.body.weather.surfaceTemperature : divelogId.weather.surfaceTemperature
       divelogId.weather.waterTemperature = req.body.weather.waterTemperature ? req.body.weather.waterTemperature : divelogId.weather.waterTemperature
       divelogId.weather.clime = req.body.weather.clime ? req.body.weather.clime : divelogId.weather.clime
       divelogId.weather.visibility = req.body.weather.visibility ? req.body.weather.visibility : divelogId.weather.visibility

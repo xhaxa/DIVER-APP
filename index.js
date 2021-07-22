@@ -1,3 +1,4 @@
+// process.stdout.write('\x1B[2J\x1B0f')
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
