@@ -27,7 +27,7 @@ const bottleSchema = new mongoose.Schema ({
 })
 
 const weatherSchema = new mongoose.Schema ({
-  surfacetemperature: {
+  surfaceTemperature: {
     type: Number
   },
   waterTemperature: {
